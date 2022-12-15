@@ -1,0 +1,13 @@
+.products_list_image {
+   max-width: 50px;
+   max-height: 50px;
+}
+.quantity_green{
+   background-color: rgb(139, 255, 104);
+}
+.quantity_blue{
+   background-color: rgb(100, 100, 250);
+}
+.quantity_red {
+   background-color: rgb(255, 75, 75);
+}
