@@ -1,34 +1,33 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useAppSelector, useAppDispatch } from "../../../../app/store";
+//MUI
 import Button from "@mui/material/Button";
-import {doc, setDoc} from "firebase/firestore";
-import {db} from '../../../../firebase';
-
-
-import { changeModalWindow , forceRerender} from "../../adminSlice/adminSlice";
-import { useDispatch, useSelector } from "react-redux";
+//Firebase
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../../../firebase";
+//Actions
+import { changeModalWindow, updateProduct } from "../../adminSlice/adminSlice";
 
 function ChangeProduct() {
-  const products = useSelector((state) => state.admin.filteredProducts);
-  const currentId = useSelector((state) => state.admin.currentProdId);
-  const dispatch = useDispatch();
+  const products = useAppSelector((state) => state.admin.filteredProducts);
+  const currentId = useAppSelector((state) => state.admin.currentProdId);
+  const dispatch = useAppDispatch();
 
-  const [thisProduct, setThisProduct] = useState(
-    products.find((item) => item.id === currentId)
-  );
+  const currentProduct = products.find((item) => item.id === currentId)!;
 
-  const [name, setName] = useState(thisProduct.name);
-  const [brand, setBrand] = useState(thisProduct.brand);
-  const [image, setImage] = useState(thisProduct.imgUrl);
-  const [color, setColor] = useState(thisProduct.color);
-  const [gender, setGender] = useState(thisProduct.gender);
-  const [price, setPrice] = useState(thisProduct.price);
-  const [quantity, setQuantity] = useState(thisProduct.quantity);
+  const [name, setName] = useState(currentProduct.name);
+  const [brand, setBrand] = useState(currentProduct.brand);
+  const [image, setImage] = useState(currentProduct.imgUrl);
+  const [color, setColor] = useState(currentProduct.color);
+  const [gender, setGender] = useState(currentProduct.gender);
+  const [price, setPrice] = useState(currentProduct.price);
+  const [quantity, setQuantity] = useState(currentProduct.quantity);
 
   const handleCancelBtn = () => {
     dispatch(changeModalWindow());
   };
 
-  const handleSaveBtn = ( ) => {
+  const handleSaveBtn = () => {
     const updatedProduct = {
       name: name,
       brand: brand,
@@ -37,11 +36,18 @@ function ChangeProduct() {
       gender: gender,
       price: price,
       quantity: quantity,
-      category: thisProduct.category, 
-    }
-    setDoc(doc(db, `/${thisProduct.category}`, `${thisProduct.id}`), updatedProduct, {merge: true})
+      category: currentProduct.category,
+      count: currentProduct.count,
+      views: currentProduct.views,
+      id: currentProduct.id,
+    };
+    setDoc(
+      doc(db, `/${currentProduct.category}`, `${currentProduct.id}`),
+      updatedProduct,
+      { merge: true }
+    ).then((res) => dispatch(updateProduct(updatedProduct)));
+
     dispatch(changeModalWindow());
-    dispatch(forceRerender());
   };
 
   return (
@@ -88,7 +94,7 @@ function ChangeProduct() {
           <input
             type="number"
             value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={(e) => setPrice(+e.target.value)}
           />
         </div>
         <div className="input_block">
@@ -96,13 +102,13 @@ function ChangeProduct() {
           <input
             type="number"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => setQuantity(+e.target.value)}
           />
         </div>
         <div className="input_block">
           <span>Gender</span>
           <select
-            value={thisProduct.gender}
+            value={currentProduct.gender}
             onChange={(e) => setGender(e.target.value)}
           >
             <option value="Male">Male</option>

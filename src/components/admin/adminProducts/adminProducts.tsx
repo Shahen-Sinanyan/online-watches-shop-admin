@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from '@mui/material/Button';
 
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../../app/store";
 
 import AddProducts from "./addProducts/addProducts";
 import ProductsSearching from './productsSearching/productsSearching';
@@ -10,7 +10,7 @@ import ChangeProduct from './changeProduct/changeProduct';
 
 function AdminProducts() {
 
-  const isModalWindow = useSelector(state => state.admin.isModalWindow)
+  const isModalWindow = useAppSelector(state => state.admin.isModalWindow)
   
   return (
     <div className="global_products">

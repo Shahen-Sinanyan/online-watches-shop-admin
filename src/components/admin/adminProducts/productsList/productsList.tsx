@@ -1,45 +1,41 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { collection, doc, deleteDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
 import {
   getProducts,
   changeModalWindow,
-  forceRerender,
   passCurrentProdId,
+  removeProduct,
 } from "../../adminSlice/adminSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../../app/store";
 
 import Button from "@mui/material/Button";
 
 function ProductsList() {
-  const [checkboxToggle, setCheckboxToggle] = useState(false);
-
-  const products = useSelector((state) => state.admin.filteredProducts);
-  const rerender = useSelector((state) => state.admin.rerender);
-  const dispatch = useDispatch();
+  const [checkboxToggle, setCheckboxToggle] = useState<boolean>(false);
+  const products = useAppSelector((state) => state.admin.filteredProducts);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getProducts());
-    return () => {
-      dispatch(getProducts()); //updating after product delete
-    };
-  }, [rerender]);
+  }, [dispatch]);
 
   const handleCheckbox = () => {
     setCheckboxToggle((prev) => !prev);
   };
 
-  const handleChangeBtn = (id) => {
+  const handleChangeBtn = (id: string) => {
     dispatch(changeModalWindow());
     dispatch(passCurrentProdId(id));
   };
 
-  const removeProduct = useCallback((id, category) => {
-    deleteDoc(doc(db, `${category}`, `${id}`));
-    dispatch(forceRerender());
-  }, []);
+  const deleteProduct = (id: string, category: string) => {
+    deleteDoc(doc(db, `${category}`, `${id}`)).then((res) =>
+      dispatch(removeProduct(id))
+    );
+  };
 
-  const handleQuantityClassName = (quantity) => {
+  const handleQuantityClassName = (quantity: number) => {
     if (quantity > 50) {
       return "quantity_green";
     } else if (quantity <= 50 && quantity > 10) {
@@ -63,7 +59,7 @@ function ProductsList() {
             <th>Color</th>
             <th>Price $</th>
             <th>Quantity</th>
-            <th>Views</th>
+            <th>Category</th>
             <th>Action</th>
             <th>
               <button onClick={handleCheckbox}>
@@ -89,7 +85,7 @@ function ProductsList() {
                 <td className={handleQuantityClassName(item.quantity)}>
                   {item.quantity}
                 </td>
-                <td>{item.views}</td>
+                <td>{item.category}</td>
                 <td>
                   <Button
                     onClick={() => handleChangeBtn(item.id)}
@@ -101,7 +97,7 @@ function ProductsList() {
                 </td>
                 <td>
                   <Button
-                    onClick={() => removeProduct(item.id, item.category)}
+                    onClick={() => deleteProduct(item.id, item.category)}
                     variant="contained"
                     color="error"
                     size="small"

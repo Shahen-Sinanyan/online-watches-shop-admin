@@ -1,21 +1,17 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import adminSlice from '../components/admin/adminSlice/adminSlice';
 import whatIsNewSlice from '../components/admin/adminWhatIsNew/whatIsNewSlice/whatIsNewSlice';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     admin: adminSlice,
     whatIsNew: whatIsNewSlice,
   },
 });
 
-export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export default store;
