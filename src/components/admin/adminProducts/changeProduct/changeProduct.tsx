@@ -7,10 +7,12 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
 //Actions
 import { changeModalWindow, updateProduct } from "../../adminSlice/adminSlice";
+import { forceRerender } from "../../adminSlice/adminSlice";
 
 function ChangeProduct() {
   const products = useAppSelector((state) => state.admin.filteredProducts);
   const currentId = useAppSelector((state) => state.admin.currentProdId);
+  
   const dispatch = useAppDispatch();
 
   const currentProduct = products.find((item) => item.id === currentId)!;
@@ -48,6 +50,7 @@ function ChangeProduct() {
     ).then((res) => dispatch(updateProduct(updatedProduct)));
 
     dispatch(changeModalWindow());
+    dispatch(forceRerender(true));
   };
 
   return (

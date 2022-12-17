@@ -75,6 +75,9 @@ const adminSlice = createSlice({
         (el) => el.id !== action.payload
       );
     },
+    forceRerender: (state, action: PayloadAction<boolean>) => {
+      state.rerender  = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -119,6 +122,7 @@ const adminSlice = createSlice({
 });
 
 export const {
+  forceRerender,
   searchByFilter,
   changeModalWindow,
   passCurrentProdId,

@@ -12,6 +12,7 @@ import { TProduct } from "../../../../types";
 import { deleteDoc, doc } from "firebase/firestore";
 import { changeModalWindow, getProducts, passCurrentProdId, removeProduct } from "../../adminSlice/adminSlice";
 import { db } from "../../../../firebase";
+import { forceRerender } from "../../adminSlice/adminSlice";
 
 import ChangeProduct from '../../adminProducts/adminProducts';
 
@@ -19,12 +20,18 @@ function LessQuantityProd() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isModalWindow = useAppSelector(state => state.admin.isModalWindow)
-  
+  const rerender = useAppSelector(state => state.admin.rerender)
   const product = useAppSelector(state => state.admin.filteredProducts)
 
 
   const [newProd, setNewProd] = useState<TProduct[]>([]);
   const [oldProd, setOldProd] = useState<TProduct[]>([]);
+  useEffect(() => {
+    if (rerender) {
+      dispatch(forceRerender(false))
+      window.location.reload()
+    }
+  },[product])
 
   useEffect(() => {
     dispatch(getProducts());
@@ -53,7 +60,7 @@ function LessQuantityProd() {
     return () => {
       async function setIdsData() {
         let allLessProductsId =
-        window.localStorage.getItem("allLessProductsId");
+        JSON.parse(window.localStorage.getItem("allLessProductsId")!) as string[];
         await setLessProdIdInDatabase(allLessProductsId);
       }
       setIdsData();
@@ -83,15 +90,16 @@ function LessQuantityProd() {
           <tr>
             <th>N</th>
             <th>Image</th>
+            <th>Category</th>
             <th>Name</th>
             <th>Brand</th>
             <th>Gender</th>
             <th>Color</th>
             <th>Price $</th>
+            <th>Views</th>
             <th>Quantity</th>
-            <th>Category</th>
             <th>Action</th>
-            <th></th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -102,13 +110,14 @@ function LessQuantityProd() {
                 <td>
                   <img className="products_list_image" src={item.imgUrl} />
                 </td>
+                <td>{item.category}</td>
                 <td>{item.name}</td>
                 <td>{item.brand}</td>
                 <td>{item.gender}</td>
                 <td>{item.color}</td>
                 <td>{item.price}$</td>
+                <td>{item.views}</td>
                 <td>{item.quantity}</td>
-                <td>{item.category}</td>
                 <td>
                   <Button
                     onClick={() => openChangeModal(item.id)}
@@ -134,17 +143,18 @@ function LessQuantityProd() {
           {oldProd.map((item, index) => {
             return (
               <tr key={index} className="old-less-products">
-                <td>{index + 1}</td>
+               <td>{index + 1}</td>
                 <td>
                   <img className="products_list_image" src={item.imgUrl} />
                 </td>
+                <td>{item.category}</td>
                 <td>{item.name}</td>
                 <td>{item.brand}</td>
                 <td>{item.gender}</td>
                 <td>{item.color}</td>
                 <td>{item.price}$</td>
+                <td>{item.views}</td>
                 <td>{item.quantity}</td>
-                <td>{item.category}</td>
                 <td>
                   <Button
                     onClick={() => openChangeModal(item.id)}

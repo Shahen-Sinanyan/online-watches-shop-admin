@@ -8,6 +8,15 @@ import AdminSales from "../adminSales/adminSales";
 import AdminMessages from "../adminMessages/adminmessages";
 import AdminFAQ from "../adminFAQ/adminFAQ";
 import LessQuantityProd from "../adminWhatIsNew/lessQuantityProd/lesQuantityProd";
+//styles
+import "./style.css";
+import "../adminProducts/style.css";
+import '../adminProducts/productsList/style.css';
+import '../adminProducts/productsSearching/style.css';
+import '../adminProducts/addProducts/style.css';
+import '../adminProducts/changeProduct/style.css';
+import '../adminWhatIsNew/style.css';
+import '../adminWhatIsNew/lessQuantityProd/style.css'
 
 function AdminMain() {
   return (

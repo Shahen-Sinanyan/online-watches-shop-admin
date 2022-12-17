@@ -44,4 +44,24 @@
 .what_is_New_borad >div> div:active {
     transform: scale(.94);
 }
-
+.lessProd{
+    position: relative;
+}
+.lessProd_notify{
+    position: absolute;
+    top: 2%;
+    right: 2%;
+}
+.lessProd_notify_num{
+    position: absolute;
+    color: rgb(207, 0, 190);
+    font-weight: bold;
+    top: 30%;
+    right: 35%;
+}
+.what_is_New_borad > div> div:hover  .lessProd_notify{
+    transform: scale(1)
+}
+.what_is_New_borad > div> div:hover .lessProd_notify_num {
+    transform: scale(1)
+}

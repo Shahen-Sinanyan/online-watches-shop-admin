@@ -50,42 +50,38 @@ function ProductsList() {
       <table>
         <thead>
           <tr>
-            <th>{checkboxToggle ? <input type="checkbox" /> : null}</th>
             <th>N</th>
             <th>Image</th>
+            <th>Category</th>
             <th>Name</th>
             <th>Brand</th>
             <th>Gender</th>
             <th>Color</th>
             <th>Price $</th>
+            <th>Views</th>
             <th>Quantity</th>
-            <th>Category</th>
             <th>Action</th>
-            <th>
-              <button onClick={handleCheckbox}>
-                {checkboxToggle ? "Take off" : "Select items"}
-              </button>
-            </th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {products.map((item, index) => {
             return (
               <tr key={index}>
-                <td>{checkboxToggle ? <input type="checkbox" /> : null}</td>
                 <td>{index + 1}</td>
                 <td>
                   <img className="products_list_image" src={item.imgUrl} />
                 </td>
+                <td>{item.category}</td>
                 <td>{item.name}</td>
                 <td>{item.brand}</td>
                 <td>{item.gender}</td>
                 <td>{item.color}</td>
                 <td>{item.price}$</td>
+                <td>{item.views}</td>
                 <td className={handleQuantityClassName(item.quantity)}>
                   {item.quantity}
                 </td>
-                <td>{item.category}</td>
                 <td>
                   <Button
                     onClick={() => handleChangeBtn(item.id)}
